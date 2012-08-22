@@ -1,0 +1,27 @@
+#!/bin/bash
+PORT=$2
+PAGE=$3
+SLEEP=$4
+if [ $1 == 'left' ]
+then
+	DIR=left
+	ROTATE=90	
+	DIMENSIONS=640x800
+else
+	DIR=right
+	ROTATE=-90
+	DIMENSIONS=640x800+640+0
+fi
+# create the directories
+mkdir captures/$DIR -p
+cd captures/$DIR
+while true; do
+	echo "Capturing page $PAGE"
+	gphoto2 --capture-image-and-download --filename=$PAGE.jpg --port=$PORT
+	convert -rotate $ROTATE $PAGE.jpg $PAGE.jpg
+	kill $PID
+	feh $PAGE.jpg -x -g $DIMENSIONS&
+	PID=$!
+	PAGE=$[$PAGE+2]
+	sleep $SLEEP
+done
