@@ -1,7 +1,7 @@
 bookscan
 ========
 
-My book scan repo for use with gphoto2
+My book scan repo for use with gphoto2 and imagemagick
 
 Connect the cameras. Unmount them. Run gphoto2 --auto-detect to get the port names
 
