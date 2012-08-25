@@ -2,6 +2,7 @@
 PORT=$2
 PAGE=$3
 SLEEP=$4
+ZOOM=$5
 if [ $1 == 'left' ]
 then
 	DIR=left
@@ -15,6 +16,9 @@ fi
 # create the directories
 mkdir captures/$DIR -p
 cd captures/$DIR
+gphoto2 --set-config zoom=$ZOOM --port=$PORT
+# tungsten/halogen
+gphoto2 --set-config whitebalance=3 --port=$PORT
 while true; do
 	echo "Capturing page $PAGE"
 	gphoto2 --capture-image-and-download --filename=$PAGE.jpg --port=$PORT
