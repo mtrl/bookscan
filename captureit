@@ -1,0 +1,50 @@
+#!/bin/bash
+# init
+function pause(){
+   read -p "$*"
+}
+
+PORTLEFT=$1
+PORTRIGHT=$3
+PAGELEFT=$2
+PAGERIGHT=$4
+ZOOM=$5
+
+echo $PORTRIGHT
+DIRLEFT=left
+ROTATELEFT=90	
+DIMENSIONSLEFT=640x800
+DIRRIGHT=right
+ROTATERIGHT=-90
+DIMENSIONSRIGHT=640x800+640+0
+
+# create the directories
+mkdir captures/$DIRLEFT captures/$DIRRIGHT -p
+cd captures
+# config left
+gphoto2 --set-config zoom=$ZOOM --port=$PORTLEFT
+gphoto2 --set-config whitebalance=3 --port=$PORTLEFT
+# config right
+gphoto2 --set-config zoom=$ZOOM --port=$PORTRIGHT
+gphoto2 --set-config whitebalance=3 --port=$PORTRIGHT
+while true; do
+	kill $PIDLEFT
+	kill $PIDRIGHT
+
+	pause 'Press [Enter] key to continue...'
+	echo "Capturing page $PAGELEFT"
+	gphoto2 --capture-image-and-download --filename=$DIRLEFT/$PAGELEFT.jpg --port=$PORTLEFT
+	convert -rotate $ROTATELEFT $DIRLEFT/$PAGELEFT.jpg $DIRLEFT/$PAGELEFT.jpg
+	feh $DIRLEFT/$PAGELEFT.jpg -x -g $DIMENSIONSLEFT&
+	PIDLEFT=$!
+	PAGELEFT=$[$PAGELEFT+2]
+	# right
+	echo "Capturing page $PAGERIGHT"
+	gphoto2 --capture-image-and-download --filename=$DIRRIGHT/$PAGERIGHT.jpg --port=$PORTRIGHT
+	convert -rotate $ROTATERIGHT $DIRRIGHT/$PAGERIGHT.jpg $DIRRIGHT/$PAGERIGHT.jpg
+	feh $DIRRIGHT/$PAGERIGHT.jpg -x -g $DIMENSIONSRIGHT&
+	PIDRIGHT=$!
+	PAGERIGHT=$[$PAGERIGHT+2]
+	sleep 2
+done
+
