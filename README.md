@@ -21,3 +21,13 @@ Or run one at a time with:
 "capture [left/right] [port name] [starting page number] [interval between loops]
 
 e.g. capture right usb:001,005 1 1
+
+# Troubleshooting
+
+If camera stops responding, doesn't let config be set or stops taking photos, do the following
+1. Unplug camera USB
+2. Turn off camera
+3. Plug in USB
+4. Turn on camera
+5. Run gphoto2 --capture-image-and-download --port=usb:xxx,xxx
+6. Should now be able to set config settings
